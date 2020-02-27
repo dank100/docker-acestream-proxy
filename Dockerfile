@@ -1,8 +1,6 @@
 # Set the base image to use to Ubuntu
 FROM ubuntu:12.04
 
-MAINTAINER Igor Katson <igor.katson@gmail.com>
-
 RUN apt-get update -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget supervisor unzip ca-certificates
 
