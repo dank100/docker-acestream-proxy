@@ -1,0 +1,52 @@
+#EXTM3U 
+#EXTINF:0,DanishBay.mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/88994d418b6cf4b6052dce047abcb71110b0e7e7/Danishbay.mp4
+#EXTINF:0,Daddylive.live - BT 1 - Daily Live Sports Stream Bookmark! (8.7 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/2c66fdb4bcdbbd4171adef662e5a56b602c702f4/Daddylive.live-BT1-DailyLiveSportsStreamBookmark!(8.7Mbps).mp4
+#EXTINF:0,Daddylive.live - BT 2 - Daily Live Sports Stream Bookmark! (11.3 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/cf3154911b1758a748c7332bd4466a482f4d02b5/Daddylive.live-BT2-DailyLiveSportsStreamBookmark!(11.3Mbps).mp4
+#EXTINF:0,Daddylive.live - BT 3 - Daily Live Sports Stream Bookmark! (11.4 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/72508cedd19dcfcba12fa6ab0ab7c62fb4be8c79/Daddylive.live-BT3-DailyLiveSportsStreamBookmark!(11.4Mbps).mp4
+#EXTINF:0,Daddylive.live - FS1 - Daily Live Sports Stream Bookmark! (11.6 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/25958c6df1d8d7ba3f7b9ea118da7e545eaccbe7/Daddylive.live-FS1-DailyLiveSportsStreamBookmark!(11.6Mbps).mp4
+#EXTINF:0,Daddylive.live - Movistar Laliga - Daily Live Sports Stream Bookmark! (4.2 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/61a6ce37643106551272c4d44609dedb06eb522b/Daddylive.live-MovistarLaliga-DailyLiveSportsStreamBookmark!(4.2Mbps).mp4
+#EXTINF:0,Daddylive.live - NBC Sports Gold - Daily Live Sports Stream Bookmark!.mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/afbd7c44cda0b70824cc0333679763f1da782214/Daddylive.live-NBCSportsGold-DailyLiveSportsStreamBookmark!.mp4
+#EXTINF:0,Daddylive.live - NBCSN - Daily Live Sports Stream Bookmark! (7.6 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/76f53140796bf1791ef4c1310d666e7514de6513/Daddylive.live-NBCSN-DailyLiveSportsStreamBookmark!(7.6Mbps).mp4
+#EXTINF:0,Daddylive.live - Newcastle United vs Burnley - Daily Live Sports Stream Bookmark! (1.4 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/18a34db9917e857db5951c7af05e31c6b9d6ffb8/Daddylive.live-NewcastleUnitedvsBurnley-DailyLiveSportsStreamBookmark!(1.4Mbps).mp4
+#EXTINF:0,Daddylive.live - Premier Sports 1 - Daily Live Sports Stream Bookmark!.mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/c77e6d3f50bef38a0705c4e6f2b708c857b22fc1/Daddylive.live-PremierSports1-DailyLiveSportsStreamBookmark!.mp4
+#EXTINF:0,Daddylive.live - Sky Football - Daily Live Sports Stream Bookmark! (6.0 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/bdfc2db20be5943179b0da4d0df310cd2674cad3/Daddylive.live-SkyFootball-DailyLiveSportsStreamBookmark!(6.0Mbps).mp4
+#EXTINF:0,Daddylive.live - Sky Main Event - Daily Live Sports Stream Bookmark! (12.9 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/103738cdf02772aac5cf12d32f7e30d9d511a6d5/Daddylive.live-SkyMainEvent-DailyLiveSportsStreamBookmark!(12.9Mbps).mp4
+#EXTINF:0,Daddylive.live - Sony Ten 2 - Daily Live Sports Stream Bookmark!.mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/a4376a5d4559ab07c54c89b1ebb6ebc94ac4e1a1/Daddylive.live-SonyTen2-DailyLiveSportsStreamBookmark!.mp4
+#EXTINF:0,Daddylive.live - Sport TV1 - Daily Live Sports Stream Bookmark! (8.4 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/fbb5c38042e4749225e8bc699852deb445c3b43e/Daddylive.live-SportTV1-DailyLiveSportsStreamBookmark!(8.4Mbps).mp4
+#EXTINF:0,Daddylive.live - beIN SPORTS USA - Daily Live Sports Stream Bookmark! (5.1 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/a95525cc41cd7057d51541b1c2df708bb6b3f4e8/Daddylive.live-beINSPORTSUSA-DailyLiveSportsStreamBookmark!(5.1Mbps).mp4
+#EXTINF:0,morningstreams.com - Sky sports football (4.8 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/6a7630383248c53f4d23cd3e25b0c85a0672d02b/morningstreams.com-Skysportsfootball(4.8Mbps).mp4
+#EXTINF:0,overtakefans.com SkySportF1 (3.2 Mbps).mp4 
+#EXTVLCOPT:network-caching=1000 
+http://185.53.131.158:8000/pid/a80ed0069d84e5aaf19a10884f12bc00eea081a1/overtakefans.comSkySportF1(3.2Mbps).mp4
