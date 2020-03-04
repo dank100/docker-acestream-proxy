@@ -65,6 +65,7 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                         pid = li.span.get("data-copy")
                         name = li.a.text
                         self.channels.append((str(name), str(pid), str(self.myServer) + "/pid/" + str(pid) + "/" + str(name.replace(" ", "")) + ".mp4"))
+                        return
             except Exception as e:
                 logger.error(repr(e))
                 self.dieWithError()
@@ -80,6 +81,9 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             if span:
                 for pid in span:
                     #Implement VLC check
+                    #self.vlcid = pid.get("data-copy")
+                    #AceConfig.vlcuse -...
+                    #self.proxyReadWrite()
                     return str(self.myServer) + "/pid/" + str(pid.get("data-copy")) + "/" + str(q) + ".mp4"
         except Exception as e:
             logger.error(repr(e))
@@ -231,11 +235,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         try:
             self.splittedpath = self.path.split('/')
             self.reqtype = self.splittedpath[1].lower()
-            # If first parameter is 'pid' or 'torrent' or it should be handled
-            # by plugin
-            if not (self.reqtype in ('pid', 'torrent', 'm3u') or self.reqtype in AceStuff.pluginshandlers):
-                self.dieWithError(400)  # 400 Bad Request
-                return
         except IndexError:
             self.dieWithError(400)  # 400 Bad Request
             return
@@ -245,11 +244,10 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             try:
                 if len(self.splittedpath) > 2:
                     self.path = self.findPID(self.splittedpath[2].lower())
-                    self.send_response(200)
-                    self.send_header('Content-type', 'html')
-                    self.end_headers()
-                    self.wfile.write(self.path)
-                    return
+                    #self.send_response(200)
+                    #self.send_header('Content-type', 'html')
+                    #self.end_headers()
+                    #self.wfile.write(self.path)
                 else:
                     self.findPIDList()
                     m3u = self.generateM3U()
@@ -258,10 +256,27 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(m3u)
                     return
-                return
             except Exception as e:
                 logger.error(repr(e))
                 self.dieWithError()
+                self.closeConnection()
+                return
+
+        try:
+            self.splittedpath = self.path.split('/')
+            self.reqtype = self.splittedpath[3].lower()
+            logger.info(self.splittedpath)
+            logger.info(self.reqtype)
+            # If first parameter is 'pid' or 'torrent' or it should be handled
+            # by plugin
+            if not (self.reqtype in ('pid', 'torrent') or self.reqtype in AceStuff.pluginshandlers):
+                logger.info("Wrong request")
+                self.dieWithError(400)  # 400 Bad Request
+                return
+        except IndexError:
+            logger.info("IndexError")
+            self.dieWithError(400)  # 400 Bad Request
+            return
 
         # Handle request with plugin handler
         if self.reqtype in AceStuff.pluginshandlers:
@@ -307,12 +322,12 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.closeConnection()
             return
 
-        self.path_unquoted = urllib2.unquote(self.splittedpath[2])
+        self.path_unquoted = urllib2.unquote(self.splittedpath[4])
         # Make list with parameters
         self.params = list()
         for i in xrange(3, 8):
             try:
-                self.params.append(int(self.splittedpath[i]))
+                self.params.append(int(self.splittedpath[i+2]))
             except (IndexError, ValueError):
                 self.params.append('0')
 
