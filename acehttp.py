@@ -84,7 +84,7 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     #self.vlcid = pid.get("data-copy")
                     #AceConfig.vlcuse -...
                     #self.proxyReadWrite()
-                    return str(self.myServer) + "/pid/" + str(pid.get("data-copy")) + "/" + str(q) + ".mp4"
+                    return "/pid/" + str(pid.get("data-copy")) + "/" + str(q) + ".mp4"
         except Exception as e:
             logger.error(repr(e))
             self.dieWithError()
@@ -264,17 +264,13 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
         try:
             self.splittedpath = self.path.split('/')
-            self.reqtype = self.splittedpath[3].lower()
-            logger.info(self.splittedpath)
-            logger.info(self.reqtype)
+            self.reqtype = self.splittedpath[1].lower()
             # If first parameter is 'pid' or 'torrent' or it should be handled
             # by plugin
             if not (self.reqtype in ('pid', 'torrent') or self.reqtype in AceStuff.pluginshandlers):
-                logger.info("Wrong request")
                 self.dieWithError(400)  # 400 Bad Request
                 return
         except IndexError:
-            logger.info("IndexError")
             self.dieWithError(400)  # 400 Bad Request
             return
 
@@ -322,12 +318,12 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.closeConnection()
             return
 
-        self.path_unquoted = urllib2.unquote(self.splittedpath[4])
+        self.path_unquoted = urllib2.unquote(self.splittedpath[2])
         # Make list with parameters
         self.params = list()
         for i in xrange(3, 8):
             try:
-                self.params.append(int(self.splittedpath[i+2]))
+                self.params.append(int(self.splittedpath[i]))
             except (IndexError, ValueError):
                 self.params.append('0')
 

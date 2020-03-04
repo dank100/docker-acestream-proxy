@@ -10,9 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -y
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y acestream-engine vlc-nox python-gevent
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python-pip python-dev
-#RUN pip install --index-url="https://pypi.python.org/simple/" beautifulsoup4
 RUN pip install --index-url="https://pypi.python.org/simple/" --upgrade pip
-#RUN pip install scrapy
 RUN pip install beautifulsoup4
 RUN pip install lxml
 
