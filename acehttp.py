@@ -64,7 +64,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     pid = li.span.get("data-copy")
                     name = li.a.text
                     self.channels.append((str(name), str(pid), str(self.myServer) + "/pid/" + str(pid) + "/" + str(name.replace(" ", "")) + ".mp4"))
-                    return
 
     def findPID(self, q):
         URL = 'https://acestreamsearch.net/en/?q=' + str(q)
@@ -229,7 +228,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.splittedpath = self.path.split('/')
             self.reqtype = self.splittedpath[1].lower()
         except IndexError:
-            logger.info("split error")
             self.dieWithError(400)  # 400 Bad Request
             return
 
@@ -267,7 +265,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 self.dieWithError(400)  # 400 Bad Request
                 return
         except IndexError:
-            logger.info("Index Error")
             self.dieWithError(400)  # 400 Bad Request
             return
 
@@ -293,7 +290,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 self.dieWithError(400)
                 return
         except IndexError:
-            logger.info("index Error")
             self.dieWithError(400)  # 400 Bad Request
             return
 
