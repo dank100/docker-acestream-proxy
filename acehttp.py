@@ -58,17 +58,13 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             response = urllib2.urlopen(page)
             content = response.read()
             soup = BeautifulSoup(content, 'lxml')
-            try:
-                results = soup.find_all("li", class_="list-group-item")
-                if results:
-                    for li in results:
-                        pid = li.span.get("data-copy")
-                        name = li.a.text
-                        self.channels.append((str(name), str(pid), str(self.myServer) + "/pid/" + str(pid) + "/" + str(name.replace(" ", "")) + ".mp4"))
-                        return
-            except Exception as e:
-                logger.error(repr(e))
-                self.dieWithError()
+            results = soup.find_all("li", class_="list-group-item")
+            if results:
+                for li in results:
+                    pid = li.span.get("data-copy")
+                    name = li.a.text
+                    self.channels.append((str(name), str(pid), str(self.myServer) + "/pid/" + str(pid) + "/" + str(name.replace(" ", "")) + ".mp4"))
+                    return
 
     def findPID(self, q):
         URL = 'https://acestreamsearch.net/en/?q=' + str(q)
@@ -76,18 +72,14 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         response = urllib2.urlopen(page)
         content = response.read()
         soup = BeautifulSoup(content, 'lxml')
-        try:
-            span = soup.find_all("span", class_="pull-right glyphicon glyphicon-copy js-tooltip js-copy")
-            if span:
-                for pid in span:
-                    #Implement VLC check
-                    #self.vlcid = pid.get("data-copy")
-                    #AceConfig.vlcuse -...
-                    #self.proxyReadWrite()
-                    return "/pid/" + str(pid.get("data-copy")) + "/" + str(q) + ".mp4"
-        except Exception as e:
-            logger.error(repr(e))
-            self.dieWithError()
+        span = soup.find_all("span", class_="pull-right glyphicon glyphicon-copy js-tooltip js-copy")
+        if span:
+            for pid in span:
+                #Implement VLC check
+                #self.vlcid = pid.get("data-copy")
+                #AceConfig.vlcuse -...
+                #self.proxyReadWrite()
+                return "/pid/" + str(pid.get("data-copy")) + "/" + str(q) + ".mp4"
 
     def generateM3U(self):
         strPlaylist = "#EXTM3U \n"
@@ -123,6 +115,7 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         '''
         Close connection with error
         '''
+        logger.flush()
         logging.warning("Dying with error")
         if self.clientconnected:
             self.send_error(errorcode)
@@ -236,9 +229,11 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.splittedpath = self.path.split('/')
             self.reqtype = self.splittedpath[1].lower()
         except IndexError:
+            logger.info("split error")
             self.dieWithError(400)  # 400 Bad Request
             return
 
+        logger.info(self.splittedpath)
         # Serve m3u file
         if self.reqtype == 'm3u':
             try:
@@ -258,8 +253,8 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     return
             except Exception as e:
                 logger.error(repr(e))
-                self.dieWithError()
-                self.closeConnection()
+                logger.info("If fail")
+                self.dieWithError(400)
                 return
 
         try:
@@ -268,9 +263,11 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             # If first parameter is 'pid' or 'torrent' or it should be handled
             # by plugin
             if not (self.reqtype in ('pid', 'torrent') or self.reqtype in AceStuff.pluginshandlers):
+                logger.info(self.splittedpath)
                 self.dieWithError(400)  # 400 Bad Request
                 return
         except IndexError:
+            logger.info("Index Error")
             self.dieWithError(400)  # 400 Bad Request
             return
 
@@ -296,6 +293,7 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 self.dieWithError(400)
                 return
         except IndexError:
+            logger.info("index Error")
             self.dieWithError(400)  # 400 Bad Request
             return
 
