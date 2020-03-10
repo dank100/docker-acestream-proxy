@@ -47,12 +47,15 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         'daddylive', 'morningstreams', 'overtakefans'
     ]
 
-    channels = [
-        ('DanishBay', '88994d418b6cf4b6052dce047abcb71110b0e7e7', 'http://185.53.131.158:8000/pid/88994d418b6cf4b6052dce047abcb71110b0e7e7/Danishbay.mp4')
-    ]
+    channels = []
 
-    def findPIDList(self):
-        for q in self.queryList:
+    def findPIDList(self, queryList):
+        self.channels = [('DanishBay', '88994d418b6cf4b6052dce047abcb71110b0e7e7', 'http://185.53.131.158:8000/pid/88994d418b6cf4b6052dce047abcb71110b0e7e7/Danishbay.mp4')]
+        for q in queryList:
+            ace = aceclient.AceClient(
+                AceConfig.acehost, AceConfig.aceport, connect_timeout=AceConfig.aceconntimeout,
+                result_timeout=AceConfig.aceresulttimeout)
+            ace.aceInit(gender=AceConfig.acesex, age=AceConfig.aceage,product_key=AceConfig.acekey, pause_delay=AceConfig.videopausedelay)
             URL = "https://acestreamsearch.net/en/?q=" + str(q)
             page = urllib2.Request(URL)
             response = urllib2.urlopen(page)
@@ -63,7 +66,14 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 for li in results:
                     pid = li.span.get("data-copy")
                     name = li.a.text
-                    self.channels.append((str(name), str(pid), str(self.myServer) + "/pid/" + str(pid) + "/" + str(name.replace(" ", "")) + ".mp4"))
+                    try:
+                        contentinfo = ace.START("pid", {'content_id': str(pid)})
+                    except:
+                        continue
+                    # Sleep abit to allow Ace to open stream
+                    gevent.sleep(1)
+                    if "HTTP connection failure" not in contentinfo:
+                        self.channels.append((str(name), str(pid), str(self.myServer) + "/pid/" + str(pid) + "/" + str(name.replace(" ", "")) + ".mp4"))
 
     def findPID(self, q):
         URL = 'https://acestreamsearch.net/en/?q=' + str(q)
@@ -74,10 +84,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         span = soup.find_all("span", class_="pull-right glyphicon glyphicon-copy js-tooltip js-copy")
         if span:
             for pid in span:
-                #Implement VLC check
-                #self.vlcid = pid.get("data-copy")
-                #AceConfig.vlcuse -...
-                #self.proxyReadWrite()
                 return "/pid/" + str(pid.get("data-copy")) + "/" + str(q) + ".mp4"
 
     def generateM3U(self):
@@ -231,18 +237,20 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.dieWithError(400)  # 400 Bad Request
             return
 
-        logger.info(self.splittedpath)
         # Serve m3u file
         if self.reqtype == 'm3u':
             try:
                 if len(self.splittedpath) > 2:
-                    self.path = self.findPID(self.splittedpath[2].lower())
-                    #self.send_response(200)
-                    #self.send_header('Content-type', 'html')
-                    #self.end_headers()
-                    #self.wfile.write(self.path)
+                    #self.path = self.findPID(self.splittedpath[2].lower())
+                    self.findPIDList([str(self.splittedpath[2].lower())])
+                    m3u = self.generateM3U()
+                    self.send_response(200)
+                    self.send_header('Content-type', 'audio/x-mpegurl')
+                    self.end_headers()
+                    self.wfile.write(m3u)
+                    return
                 else:
-                    self.findPIDList()
+                    self.findPIDList(self.queryList)
                     m3u = self.generateM3U()
                     self.send_response(200)
                     self.send_header('Content-type', 'audio/x-mpegurl')
@@ -251,7 +259,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     return
             except Exception as e:
                 logger.error(repr(e))
-                logger.info("If fail")
                 self.dieWithError(400)
                 return
 
@@ -261,7 +268,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             # If first parameter is 'pid' or 'torrent' or it should be handled
             # by plugin
             if not (self.reqtype in ('pid', 'torrent') or self.reqtype in AceStuff.pluginshandlers):
-                logger.info(self.splittedpath)
                 self.dieWithError(400)  # 400 Bad Request
                 return
         except IndexError:
