@@ -20,9 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run tests
-        run:  
-          echo "Test"
-          #docker build . --file Dockerfile
+        run: docker build . --file Dockerfile
         
   push:
     # Ensure test job passes before pushing image.
