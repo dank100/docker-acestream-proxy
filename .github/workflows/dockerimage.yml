@@ -9,5 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build the Docker image and push
+      with:
+        image: dank100/docker-acestream-proxy:$(date +%s)
+        tage: latest
+        registry: docker.pkg.github.com
+        dockerfile: Dockerfile
+        username: dank100
+        password: ${{ secrets.DOCKER_PASSWORD }}
