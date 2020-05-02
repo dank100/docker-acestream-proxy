@@ -11,8 +11,8 @@ jobs:
     - uses: actions/checkout@v2
       name: Build the Docker image and push
       with:
-        image: dank100/docker-acestream-proxy:$(date +%s)
-        tage: latest
+        image: docker-acestream-proxy/acestream
+        tag: latest
         registry: docker.pkg.github.com
         dockerfile: Dockerfile
         username: dank100
