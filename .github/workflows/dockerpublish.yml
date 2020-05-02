@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run tests
-        run: docker build . --file Dockerfile
+        run: docker build . --file Dockerfile --tag image
         
   push:
     #needs: test
@@ -32,5 +32,5 @@ jobs:
           run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
         - name: Push image
           run: |
-            docker tag IMAGE_ID docker.pkg.github.com/dank100/docker-acestream-proxy/IMAGE_NAME:VERSION
+            docker tag image docker.pkg.github.com/dank100/docker-acestream-proxy/IMAGE_NAME:VERSION
             docker push docker.pkg.github.com/dank100/docker-acestream-proxy/IMAGE_NAME:VERSION
