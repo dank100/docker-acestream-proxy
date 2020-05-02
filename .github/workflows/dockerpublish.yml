@@ -7,9 +7,6 @@ on:
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
- 
- # Run tests for any PRs.
-  pull_request:
 
 env:
   IMAGE_NAME: aceproxy
@@ -27,14 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-        - uses: actions/checkout@master
-        - name: build-push
-          uses: elgohr/Publish-Docker-Github-Action@master
-          with:
-            username: ${{ github.actor }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
-            workdir: .
-            dockerfile: Dockerfile
-            registry: docker.pkg.github.com
-            repository: ${{ github.repository }}
-            tags: latest
+        - uses: actions/checkout@v2
+        - name: build
+          run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        - name: Log into registry
+          run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        - name: Push image
+          run: |
+               IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+               docker push $IMAGE_ID:latest
