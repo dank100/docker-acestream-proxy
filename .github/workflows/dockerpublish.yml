@@ -23,17 +23,18 @@ jobs:
         run: docker build . --file Dockerfile
         
   push:
-    needs: test
+    #needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - name: build-push
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          image_name: $IMAGE_NAME
-          working_directory: '.'
-          registry: docker.pkg.github.com
-          repository: ${{ github.repository }}
-          tags: latest
+        - uses: actions/checkout@master
+        - name: build-push
+          uses: elgohr/Publish-Docker-Github-Action@master
+          with:
+            username: ${{ github.actor }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+            workdir: .
+            dockerfile: Dockerfile
+            registry: docker.pkg.github.com
+            repository: ${{ github.repository }}
+            tags: latest
