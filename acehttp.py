@@ -44,13 +44,13 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     myServer = "http://185.53.131.158:8000"
 
     queryList = [
-        'daddylive', 'morningstreams', 'overtakefans'
+        'daddylive', 'morningstreams', 'overtakefans', 'danishbay'
     ]
 
     channels = []
 
     def findPIDList(self, queryList):
-        self.channels = [('DanishBay', '88994d418b6cf4b6052dce047abcb71110b0e7e7', 'http://185.53.131.158:8000/pid/88994d418b6cf4b6052dce047abcb71110b0e7e7/Danishbay.mp4')]
+        self.channels = []
         for q in queryList:
             ace = aceclient.AceClient(
                 AceConfig.acehost, AceConfig.aceport, connect_timeout=AceConfig.aceconntimeout,
