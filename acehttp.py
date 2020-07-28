@@ -41,7 +41,7 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     requestlist = []
 
-    myServer = "http://185.53.131.158:8000"
+    myServer = "http://185.53.129.142:8000"
 
     queryList = [
         'daddylive', 'morningstreams', 'overtakefans', 'danishbay'
