@@ -41,7 +41,7 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     requestlist = []
 
-    myServer = "http://185.53.129.142:8000"
+    myServer = "YOUR_SERVER"
 
     queryList = [
         'daddylive', 'morningstreams', 'overtakefans', 'danishbay'
@@ -69,22 +69,12 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     try:
                         contentinfo = ace.START("pid", {'content_id': str(pid)})
                     except:
+                        logging.warning("Dying with ace error")
                         continue
                     # Sleep abit to allow Ace to open stream
                     gevent.sleep(1)
                     if "HTTP connection failure" not in contentinfo:
                         self.channels.append((str(name), str(pid), str(self.myServer) + "/pid/" + str(pid) + "/" + str(name.replace(" ", "")) + ".mp4"))
-
-    def findPID(self, q):
-        URL = 'https://acestreamsearch.net/en/?q=' + str(q)
-        page = urllib2.Request(URL)
-        response = urllib2.urlopen(page)
-        content = response.read()
-        soup = BeautifulSoup(content, 'lxml')
-        span = soup.find_all("span", class_="pull-right glyphicon glyphicon-copy js-tooltip js-copy")
-        if span:
-            for pid in span:
-                return "/pid/" + str(pid.get("data-copy")) + "/" + str(q) + ".mp4"
 
     def generateM3U(self):
         strPlaylist = "#EXTM3U \n"
@@ -241,7 +231,6 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         if self.reqtype == 'm3u':
             try:
                 if len(self.splittedpath) > 2:
-                    #self.path = self.findPID(self.splittedpath[2].lower())
                     self.findPIDList([str(self.splittedpath[2].lower())])
                     m3u = self.generateM3U()
                     self.send_response(200)
