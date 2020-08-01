@@ -17,7 +17,9 @@ import logging
 import BaseHTTPServer
 import SocketServer
 from socket import error as SocketException
-import urllib2
+import urllib3.contrib.pyopenssl
+import certifi
+import urllib3
 import hashlib
 import aceclient
 import aceconfig
@@ -36,12 +38,13 @@ try:
 except ImportError:
     # Windows
     pass
+urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     requestlist = []
 
-    myServer = "YOUR_SERVER"
+    myServer = "http://[YOUR_IP]:8000"
 
     queryList = [
         'daddylive', 'morningstreams', 'overtakefans', 'danishbay'
@@ -57,10 +60,11 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 result_timeout=AceConfig.aceresulttimeout)
             ace.aceInit(gender=AceConfig.acesex, age=AceConfig.aceage,product_key=AceConfig.acekey, pause_delay=AceConfig.videopausedelay)
             URL = "https://acestreamsearch.net/en/?q=" + str(q)
-            page = urllib2.Request(URL)
-            response = urllib2.urlopen(page)
-            content = response.read()
-            soup = BeautifulSoup(content, 'lxml')
+            http = urllib3.PoolManager(
+                        cert_reqs='CERT_REQUIRED',
+                        ca_certs=certifi.where())
+            response = http.request('GET', URL) 
+            soup = BeautifulSoup(response.data, 'lxml')
             results = soup.find_all("li", class_="list-group-item")
             if results:
                 for li in results:
@@ -223,6 +227,11 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         try:
             self.splittedpath = self.path.split('/')
             self.reqtype = self.splittedpath[1].lower()
+            # If first parameter is 'pid' or 'torrent' or it should be handled
+            # by plugin
+            if not (self.reqtype in ('m3u', 'pid', 'torrent') or self.reqtype in AceStuff.pluginshandlers):
+                self.dieWithError(400)  # 400 Bad Request
+                return
         except IndexError:
             self.dieWithError(400)  # 400 Bad Request
             return
@@ -230,37 +239,18 @@ class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         # Serve m3u file
         if self.reqtype == 'm3u':
             try:
+                self.send_response(200)
+                self.send_header('Content-type', 'audio/x-mpegurl')
+                self.end_headers()
                 if len(self.splittedpath) > 2:
                     self.findPIDList([str(self.splittedpath[2].lower())])
-                    m3u = self.generateM3U()
-                    self.send_response(200)
-                    self.send_header('Content-type', 'audio/x-mpegurl')
-                    self.end_headers()
-                    self.wfile.write(m3u)
-                    return
                 else:
                     self.findPIDList(self.queryList)
-                    m3u = self.generateM3U()
-                    self.send_response(200)
-                    self.send_header('Content-type', 'audio/x-mpegurl')
-                    self.end_headers()
-                    self.wfile.write(m3u)
-                    return
+                m3u = self.generateM3U()
+                self.wfile.write(m3u)
             except Exception as e:
                 logger.error(repr(e))
                 self.dieWithError(400)
-                return
-
-        try:
-            self.splittedpath = self.path.split('/')
-            self.reqtype = self.splittedpath[1].lower()
-            # If first parameter is 'pid' or 'torrent' or it should be handled
-            # by plugin
-            if not (self.reqtype in ('pid', 'torrent') or self.reqtype in AceStuff.pluginshandlers):
-                self.dieWithError(400)  # 400 Bad Request
-                return
-        except IndexError:
-            self.dieWithError(400)  # 400 Bad Request
             return
 
         # Handle request with plugin handler
