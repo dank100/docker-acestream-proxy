@@ -17,6 +17,7 @@ import logging
 import BaseHTTPServer
 import SocketServer
 from socket import error as SocketException
+import urllib2
 import urllib3.contrib.pyopenssl
 import certifi
 import urllib3
